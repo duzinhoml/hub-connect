@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { QUERY_ME } from "../../utils/queries.js";
 import { DELETE_POST } from "../../utils/mutations.js";
 
 import CreatePost from "./CreatePost.jsx";
+import UpdatePost from "./UpdatePost.jsx";
 
 function Feed({ user, error }) {
+    const [currentPost, setCurrentPost] = useState(null);
+
     const [deletePost] = useMutation(DELETE_POST, {
         refetchQueries: [
             QUERY_ME
@@ -32,9 +36,20 @@ function Feed({ user, error }) {
                     <div key={post._id} className="card mb-2 mx-2">
                         <div className="card-header d-flex align-items-center justify-content-between">
                             {post.title}
-                            <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeletePost(post._id)}>
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <div>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-warning btn-sm me-2" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#updatePost"
+                                    onClick={() => setCurrentPost(post)}
+                                >
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeletePost(post._id)}>
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                         <div className="card-body text-start">
                             <p className="card-text">
@@ -49,6 +64,7 @@ function Feed({ user, error }) {
                 </div>
             )}
             <CreatePost />
+            <UpdatePost currentPost={currentPost}/>
         </>
     );
 };

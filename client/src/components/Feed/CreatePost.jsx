@@ -46,6 +46,13 @@ function CreatePost() {
         }
     }
 
+    const clearForm = () => {
+        setFormData({
+            title: '',
+            content: ''
+        });
+    };
+
     return (
         <>
             <div class="modal fade" id="createPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createPostLabel" aria-hidden="true">
@@ -53,7 +60,7 @@ function CreatePost() {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="createPostLabel">Create New Post</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => clearForm()}></button>
                         </div>
 
                         <form onSubmit={handleFormSubmit}>
@@ -77,7 +84,7 @@ function CreatePost() {
                                 />
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick={() => clearForm()}>Cancel</button>
                                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Post</button>
                             </div>
                         </form>
