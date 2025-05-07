@@ -11,6 +11,7 @@ export const QUERY_USER = gql`
                 _id
                 title
                 content
+                comments
             }
         }
     }
@@ -27,6 +28,7 @@ export const QUERY_ME = gql`
                 _id
                 title
                 content
+                comments
             }
         }
     }
@@ -38,6 +40,7 @@ export const QUERY_POSTS = gql`
             _id
             title
             content
+            comments
         }
     }
 `;
@@ -48,6 +51,7 @@ export const QUERY_SINGLE_POST = gql`
             _id
             title
             content
+            comments
         }
     }
 `;

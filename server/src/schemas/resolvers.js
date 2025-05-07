@@ -89,7 +89,32 @@ const resolvers = {
                 throw new AuthenticationError('You need to be logged in!');
             } 
             catch (err) {
-                throw new AuthenticationError('You need to be logged in!');
+                throw new Error('Failed to created post');
+            }
+        },
+        createComment: async (_, { postId, comment }, context) => {
+            try {
+                if (!context.user) {
+                    throw new AuthenticationError('You need to be logged in!');
+                }
+
+                const post = await Post.findOne({ _id: postId });
+                if (!post) {
+                    throw new Error('Post not found');
+                }
+
+                const updatedPost = await Post.findOneAndUpdate(
+                    { _id: postId },
+                    { $addToSet: {
+                        comments: comment
+                    }},
+                    { new: true }
+                );
+
+                return updatedPost;
+            } 
+            catch (err) {
+                throw new Error('Failed to create comment');
             }
         },
         updateUser: async (_, { userId, input }, context) => {
@@ -170,6 +195,31 @@ const resolvers = {
             } 
             catch (err) {
                 return `Failed to delete note: ${err.message}`;
+            }
+        },
+        deleteComment: async (_, { postId, comment }, context) => {
+            try {
+                if (!context.user) {
+                    throw new AuthenticationError('You need to be logged in!');
+                }
+
+                const post = await Post.findOne({ _id: postId });
+                if (!post) {
+                    throw new Error('Post not found');
+                }
+
+                const updatedPost = await Post.findOneAndUpdate(
+                    { _id: postId },
+                    { $pull: {
+                        comments: comment
+                    }},
+                    { new: true }
+                );
+
+                return updatedPost;
+            } 
+            catch (err) {
+                return `Failed to delete comment: ${err.message}`;
             }
         }
     }

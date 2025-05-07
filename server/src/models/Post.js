@@ -11,7 +11,13 @@ const postSchema = new Schema(
             type: String,
             required: true,
             trim: true
-        }
+        },
+        comments: [
+            {
+                type: String,
+                trim: true
+            }
+        ]
     }
 );
 

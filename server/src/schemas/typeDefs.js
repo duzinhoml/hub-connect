@@ -11,6 +11,7 @@ const typeDefs = `
         _id: ID!
         title: String!
         content: String!
+        comments: [String]
     }
 
     type Auth {
@@ -52,12 +53,15 @@ const typeDefs = `
         createUser(input: CreateUserInput!): Auth
         login(username: String!, password: String!): Auth
         createPost(input: CreatePostInput!): String
+        createComment(postId: ID!, comment: String!): Post
 
         updateUser(userId: ID!, input: UpdateUserInput!): User
         updatePost(postId: ID!, input: UpdatePostInput!): Post
+        updateComment(postId: ID!, comment: String!): Post
 
         deleteUserById(userId: ID!): String
         deletePost(postId: ID!): String
+        deleteComment(postId: ID!, comment: String!): Post
     }
 `;
 

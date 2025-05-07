@@ -30,6 +30,17 @@ export const CREATE_POST = gql`
     }
 `;
 
+export const CREATE_COMMENT = gql`
+    mutation createComment($postId: ID!, $comment: String!) {
+        createComment(postId: $postId, comment: $comment) {
+            _id
+            title
+            content
+            comments
+        }
+    }
+`;
+
 export const UPDATE_USER = gql`
     mutation updateUser($userId: ID!, $input: UpdateUserInput!) {
         updateUser(userId: $userId, input: $input) {
@@ -41,23 +52,35 @@ export const UPDATE_USER = gql`
 `;
 
 export const UPDATE_POST = gql`
-    mutation Login($postId: ID!, $input: UpdatePostInput!) {
+    mutation updatePost($postId: ID!, $input: UpdatePostInput!) {
         updatePost(postId: $postId, input: $input) {
             _id
             title
             content
+            comments
         }
     }
 `;
 
 export const DELETE_USER_BY_ID = gql`
-    mutation Login($userId: ID!) {
+    mutation deleteUserById($userId: ID!) {
         deleteUserById(userId: $userId)
     }
 `;
 
 export const DELETE_POST = gql`
-    mutation Login($postId: ID!) {
+    mutation deletePost($postId: ID!) {
         deletePost(postId: $postId)
+    }
+`;
+
+export const DELETE_COMMENT = gql`
+    mutation deleteComment($postId: ID!, $comment: String!) {
+        deleteComment(postId: $postId, comment: $comment) {
+            _id
+            title
+            content
+            comments
+        }
     }
 `;

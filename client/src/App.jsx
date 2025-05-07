@@ -5,8 +5,7 @@ import './App.css'
 
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
-import Home from './pages/Home.jsx';
+import { Outlet } from 'react-router-dom';
 
 const httpLink = createHttpLink({
   uri: process.env.NODE_ENV === 'production' ? '/graphql' : 'http://localhost:3001/graphql',
@@ -33,7 +32,7 @@ function App() {
   return (
     <>
       <ApolloProvider client={client}>
-        <Home/>
+        <Outlet/>
       </ApolloProvider>
     </>
   )

@@ -5,6 +5,7 @@ import { DELETE_POST } from "../../utils/mutations.js";
 
 import CreatePost from "./CreatePost.jsx";
 import UpdatePost from "./UpdatePost.jsx";
+import Comments from "./Comments.jsx";
 
 function Feed({ user, error }) {
     const [currentPost, setCurrentPost] = useState(null);
@@ -38,6 +39,15 @@ function Feed({ user, error }) {
                             {post.title}
                             <div>
                                 <button 
+                                    className="btn me-2"
+                                    type="button" 
+                                    data-bs-toggle="offcanvas" 
+                                    data-bs-target={`#postComments${post._id}`}
+                                    onClick={() => setCurrentPost(post)}
+                                >
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </button>
+                                <button 
                                     type="button" 
                                     className="btn btn-warning btn-sm me-2" 
                                     data-bs-toggle="modal" 
@@ -65,6 +75,7 @@ function Feed({ user, error }) {
             )}
             <CreatePost />
             <UpdatePost currentPost={currentPost}/>
+            <Comments currentPost={currentPost} />
         </>
     );
 };
