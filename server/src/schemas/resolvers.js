@@ -52,10 +52,15 @@ const resolvers = {
                 throw new Error(`${err.message}`);
             }
         },
-        login: async (_, { username }) => {
+        login: async (_, { username, password }) => {
             const user = await User.findOne({ username }).populate('posts');
             if (!user) {
                 throw new AuthenticationError('User not found. Please check your username or create a new account.');
+            }
+
+            const correctPW = await user.isCorrectPassword(password);
+            if (!correctPW) {
+                throw new AuthenticationError('Incorrect username or password. Please try again.');
             }
 
             const token = signToken(user._id, user.username);
@@ -78,7 +83,8 @@ const resolvers = {
                     if (!updatedUser) {
                         throw new Error('User not found or update failed');
                     }
-                    return post;
+
+                    return `Post "${post.title}" created successfully!`;
                 };
                 throw new AuthenticationError('You need to be logged in!');
             } 

@@ -4,7 +4,6 @@ const typeDefs = `
         firstName: String!
         lastName: String!
         username: String!
-        password: String!
         posts: [Post]
     }
 
@@ -52,7 +51,7 @@ const typeDefs = `
     type Mutation {
         createUser(input: CreateUserInput!): Auth
         login(username: String!, password: String!): Auth
-        createPost(input: CreatePostInput!): Post
+        createPost(input: CreatePostInput!): String
 
         updateUser(userId: ID!, input: UpdateUserInput!): User
         updatePost(postId: ID!, input: UpdatePostInput!): Post
