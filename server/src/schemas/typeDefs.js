@@ -5,6 +5,7 @@ const typeDefs = `
         lastName: String!
         username: String!
         posts: [Post]
+        comments: [String]
     }
 
     type Post {
@@ -12,6 +13,7 @@ const typeDefs = `
         title: String!
         content: String!
         comments: [String]
+        createDate: String
     }
 
     type Auth {

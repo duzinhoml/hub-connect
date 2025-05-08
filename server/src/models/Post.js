@@ -18,8 +18,29 @@ const postSchema = new Schema(
                 trim: true
             }
         ]
+    },
+    {
+        toJSON: {
+            virtuals: true
+        },
+        id: false,
+        timestamps: true
     }
 );
+
+postSchema.virtual('createDate').get(function() {
+    const createdAt = new Date(this.createdAt);
+    
+    const day = createdAt.getDate().toString().padStart(2, '0');
+    const month = createdAt.toLocaleString('en-US', { month: 'short' });
+    const year = createdAt.getFullYear();
+
+    return `${month} ${day}, ${year}`;
+});
+
+// postSchema.virtual('commentCreateDate').get(function() {
+//     const createdAt = new Date(this)
+// })
 
 const Post = model('Post', postSchema);
 

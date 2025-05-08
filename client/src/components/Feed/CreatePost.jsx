@@ -55,16 +55,16 @@ function CreatePost() {
 
     return (
         <>
-            <div class="modal fade" id="createPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createPostLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="createPostLabel">Create New Post</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => clearForm()}></button>
+            <div className="modal fade" id="createPost" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="createPostLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="createPostLabel">Create New Post</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => clearForm()}></button>
                         </div>
 
                         <form onSubmit={handleFormSubmit}>
-                            <div class="modal-body">
+                            <div className="modal-body">
                                 <input 
                                     type="text" 
                                     name="title"
@@ -83,9 +83,9 @@ function CreatePost() {
                                     className="form-control mb-2"
                                 />
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick={() => clearForm()}>Cancel</button>
-                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Post</button>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => clearForm()}>Cancel</button>
+                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Post</button>
                             </div>
                         </form>
 

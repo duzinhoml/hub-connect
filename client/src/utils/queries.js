@@ -1,5 +1,24 @@
 import { gql } from '@apollo/client';
 
+export const QUERY_USERS = gql`
+    query users {
+        users {
+            _id
+            firstName
+            lastName
+            username
+            posts {
+                _id
+                title
+                content
+                comments
+                createDate
+            }
+            comments
+        }
+    }
+`;
+
 export const QUERY_USER = gql`
     query user($username: String!) {
         user(username: $username) {
@@ -12,7 +31,9 @@ export const QUERY_USER = gql`
                 title
                 content
                 comments
+                createDate
             }
+            comments
         }
     }
 `;
@@ -29,7 +50,9 @@ export const QUERY_ME = gql`
                 title
                 content
                 comments
+                createDate
             }
+            comments
         }
     }
 `;
@@ -41,6 +64,7 @@ export const QUERY_POSTS = gql`
             title
             content
             comments
+            createDate
         }
     }
 `;
@@ -52,6 +76,7 @@ export const QUERY_SINGLE_POST = gql`
             title
             content
             comments
+            createDate
         }
     }
 `;

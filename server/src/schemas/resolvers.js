@@ -111,6 +111,14 @@ const resolvers = {
                     { new: true }
                 );
 
+                await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: {
+                        comments: comment
+                    }},
+                    { new: true }
+                );
+
                 return updatedPost;
             } 
             catch (err) {
@@ -172,8 +180,17 @@ const resolvers = {
                     }
                 });
 
+                await Post.updateMany(
+                    {},
+                    { $pull: {
+                        comments: {
+                            $in: user.comments
+                        }
+                    }}
+                );
+
                 await User.findOneAndDelete({ _id: userId });
-                return `${user.firstName} ${user.lastName}, your account and associated posts have been deleted successfully`;
+                return `${user.firstName} ${user.lastName}, your account and associated posts/comments have been deleted successfully`;
             } 
             catch (err) {
                 throw new Error(`Failed to delete user: ${err.message}`);
@@ -189,6 +206,15 @@ const resolvers = {
                 if (!post) {
                     throw new Error('Post not found');
                 }
+
+                await User.updateMany(
+                    {},
+                    { $pull: {
+                        comments: {
+                            $in: post.comments
+                        }
+                    }}
+                );
 
                 await Post.findOneAndDelete({ _id: postId });
                 return `The post "${post.title}" has been deleted successfully`;
@@ -210,6 +236,14 @@ const resolvers = {
 
                 const updatedPost = await Post.findOneAndUpdate(
                     { _id: postId },
+                    { $pull: {
+                        comments: comment
+                    }},
+                    { new: true }
+                );
+
+                await User.findOneAndUpdate(
+                    { _id: context.user._id },
                     { $pull: {
                         comments: comment
                     }},
