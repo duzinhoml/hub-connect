@@ -14,6 +14,7 @@ const typeDefs = `
         content: String!
         comments: [String]
         createDate: String
+        createdAt: String
     }
 
     type Auth {

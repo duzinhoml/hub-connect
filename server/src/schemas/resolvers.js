@@ -22,12 +22,12 @@ const resolvers = {
             throw new AuthenticationError('Not Authenticated');
         },
         posts: async () => {
-            return await Post.find({});
+            return await Post.find({}).sort({ createdAt: -1 });
         },
         post: async (_, { postId }) => {
             const post = await Post.findOne({ _id: postId });
             if (!post) {
-                "Post not found";
+                throw new Error("Post not found");
             }
             return post;
         }
