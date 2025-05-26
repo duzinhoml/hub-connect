@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { useQuery, useMutation } from "@apollo/client";
-import { QUERY_ME } from "../../utils/queries.js";
 import { QUERY_SINGLE_POST } from "../../utils/queries.js";
 
 import { CREATE_COMMENT } from "../../utils/mutations.js";
@@ -10,21 +9,15 @@ import { DELETE_COMMENT } from "../../utils/mutations.js";
 function Comments({ currentPost, me, users }) {
     const [formData, setFormData] = useState('')
 
-    const { loading, data } = useQuery(QUERY_SINGLE_POST, {
-        variables: { postId: currentPost?._id}
+    const { data: singlePostData } = useQuery(QUERY_SINGLE_POST, {
+        variables: {
+            postId: currentPost ? currentPost._id : null
+        }
     });
 
-    const [createComment] = useMutation(CREATE_COMMENT, {
-        refetchQueries: [
-            QUERY_ME
-        ]
-    });
+    const [createComment] = useMutation(CREATE_COMMENT);
 
-    const [deleteComment] = useMutation(DELETE_COMMENT, {
-        refetchQueries: [
-            QUERY_ME
-        ]
-    });
+    const [deleteComment] = useMutation(DELETE_COMMENT);
 
     const handleInputChange = (e) => {
         setFormData(e.target.value);
@@ -37,7 +30,7 @@ function Comments({ currentPost, me, users }) {
             await createComment({
                 variables: {
                     postId: currentPost._id,
-                    comment: formData
+                    content: formData
                 } 
             });
             setFormData('');
@@ -47,12 +40,12 @@ function Comments({ currentPost, me, users }) {
         }
     }
 
-    const handleDeleteComment = async (postId, comment) => {
+    const handleDeleteComment = async (postId, commentId) => {
         try {
             await deleteComment({
                 variables: {
                     postId,
-                    comment
+                    commentId
                 }
             });
         }
@@ -61,34 +54,34 @@ function Comments({ currentPost, me, users }) {
         }
     }
 
-    const comments = data?.post?.comments || [];
+    const singlePost = singlePostData?.post || {};
 
     return (
         <div className="offcanvas offcanvas-bottom" tabIndex="-1" id={currentPost && `postComments${currentPost._id}`} aria-labelledby="postCommentsLabel" style={{ height: '50vh' }}>
             <div className="offcanvas-header">
                 <h5 className="offcanvas-title" id="postCommentsLabel">
-                    {users?.map(user => user.posts.some(post => post._id === currentPost?._id) ? `${user.username}'s Post` : '')}
+                    {currentPost ? `${currentPost.user.username}'s Post` : 'Comments'}
                 </h5>
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body small">
-                {comments.length ? (
-                    comments.map((comment, index) => (
-                        <div key={index} className="card mb-2 mx-2 p-2">
+                {singlePost && singlePost?.comments?.length ? (
+                    singlePost?.comments.map(comment => (
+                        <div key={comment._id} className="card mb-2 mx-2 p-2">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex flex-column">
                                     <div>
-                                        {users.map(user => user.comments.includes(comment) ? user.username : '')}
-                                        <span className="text-muted ms-2">1min</span>
+                                        {comment.user.username}
+                                        <span className="text-muted ms-2">{comment.timeSince}</span>
                                     </div>
-                                    <div>{comment}</div>
+                                    <div>{comment.content}</div>
                                 </div>
-                                {me.posts.some(mePost => mePost._id === currentPost._id) ? (
-                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment)}>
+                                {comment.user._id === me._id ? (
+                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
                                         <i className="fa-solid fa-trash"></i>
                                     </button>
-                                ) : me.comments.some(meComment => meComment === comment) ? (
-                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment)}>
+                                ) : singlePost.user._id === me._id ? (
+                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
                                         <i className="fa-solid fa-trash"></i>
                                     </button>
                                 ) : ''}
@@ -109,7 +102,7 @@ function Comments({ currentPost, me, users }) {
                         onChange={handleInputChange}
                         autoComplete="off"
                     />
-                    <button className="btn btn-primary ms-1" type="submit">
+                    <button className="btn btn-primary ms-2" type="submit">
                         <i className="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>

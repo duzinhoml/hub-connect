@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { QUERY_ME } from "../../utils/queries.js";
+import { useQuery, useMutation } from "@apollo/client";
+import { QUERY_ME, QUERY_POSTS } from "../../utils/queries.js";
 import { DELETE_POST } from "../../utils/mutations.js";
 
 import CreatePost from "./CreatePost.jsx";
@@ -10,9 +10,14 @@ import Comments from "./Comments.jsx";
 function Feed({ me, users, error }) {
     const [currentPost, setCurrentPost] = useState(null);
 
+    const { data: postsData } = useQuery(QUERY_POSTS);
+
+    const posts = postsData?.posts || [];
+
     const [deletePost] = useMutation(DELETE_POST, {
         refetchQueries: [
-            QUERY_ME
+            QUERY_ME,
+            QUERY_POSTS
         ]
     });
 
@@ -32,17 +37,16 @@ function Feed({ me, users, error }) {
     return (
         <>
             {error && <div className="alert alert-danger" role="alert">{error.message}</div>}
-            {users?.some(user => user.posts.length) ? (
-                users.map(user => 
-                    user.posts.map(post => (
-                        <div 
+            {posts.length ? (
+                posts.map(post => (
+                    <div 
                             key={post._id} 
                             className="card mb-2 mx-2" 
                             onMouseOver={() => setCurrentPost(post)}
                         >
                             <div className="card-header d-flex align-items-center justify-content-between row">
                                 <div className="d-flex flex-column col">
-                                    <div>{user.firstName} {user.lastName}</div>
+                                    <div>{post.user.firstName} {post.user.lastName}</div>
                                     <div>{post.title}</div>
                                 </div>
                                 <div className="col text-center">{post.createDate}</div>
@@ -55,7 +59,7 @@ function Feed({ me, users, error }) {
                                     >
                                         <i className="fa-solid fa-angle-down"></i>
                                     </button>
-                                    {me.posts.some(mePost => mePost._id === post._id) ? (
+                                    {post.user._id === me._id ? (
                                         <>
                                             <button 
                                                 type="button" 
@@ -79,11 +83,11 @@ function Feed({ me, users, error }) {
                             </div>
                         </div>
                     ))
-                )) : (
-                    <div className="alert alert-info" role="alert">
+                ) : (
+                    <div className="alert alert-secondary" role="alert">
                         {'No posts available.'}
                     </div>
-            )}
+                )}
             <CreatePost />
             <UpdatePost currentPost={currentPost}/>
             <Comments currentPost={currentPost} me={me} users={users} />

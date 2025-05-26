@@ -20,6 +20,12 @@ function Nav({ me }) {
                 </ul>
                 <span className="navbar-text">
                     <button
+                        className='btn btn-secondary me-2'
+                        onClick={() => window.location.reload()}
+                    >
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                    <button
                         className='btn btn-danger'
                         onClick={() => Auth.logout()}
                     >

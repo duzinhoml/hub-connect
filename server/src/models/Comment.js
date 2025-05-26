@@ -1,27 +1,20 @@
 import { Schema, model } from 'mongoose';
 
-const postSchema = new Schema(
+const commentSchema = new Schema(
     {
         user: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'User'
         },
-        title: {
-            type: String,
-            required: true,
-            trim: true
+        post: {
+            type: Schema.Types.ObjectId,
+            ref: 'Post'
         },
         content: {
             type: String,
             required: true,
             trim: true
         },
-        comments: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Comment'
-            }
-        ],
         createdAt: {
             type: Date,
             default: Date.now,
@@ -48,7 +41,7 @@ const postSchema = new Schema(
     }
 );
 
-postSchema.virtual('createDate').get(function() {
+commentSchema.virtual('createDate').get(function() {
     const createdAt = new Date(this.createdAt);
     
     const day = createdAt.getDate().toString().padStart(2, '0');
@@ -56,17 +49,42 @@ postSchema.virtual('createDate').get(function() {
     const year = createdAt.getFullYear();
     let hours = createdAt.getHours();
     const minutes = createdAt.getMinutes().toString().padStart(2, '0');
+    const seconds = createdAt.getSeconds().toString().padStart(2, '0');
 
     const period = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
 
-    return `${month} ${day}, ${year} at ${hours}:${minutes} ${period}`;
+    return `${month} ${day}, ${year} at ${hours}:${minutes}:${seconds} ${period}`;
 });
 
-// postSchema.virtual('commentCreateDate').get(function() {
-//     const createdAt = new Date(this)
-// })
+commentSchema.virtual('timeSince').get(function() {
+    const now = new Date();
+    const createdAt = new Date(this.createdAt);
 
-const Post = model('Post', postSchema);
+    const diffInSeconds = Math.floor((now - createdAt) / 1000);
+    if (diffInSeconds < 60) {
+        return `${diffInSeconds + 1}s`;
+    }
 
-export default Post;
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+        return `${diffInMinutes}min`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+        return `${diffInHours}h`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) {
+        return `${diffInDays}d`;
+    }
+
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    return `${diffInWeeks}w`;
+});
+
+const Comment = model('Comment', commentSchema);
+
+export default Comment;

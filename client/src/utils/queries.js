@@ -11,10 +11,8 @@ export const QUERY_USERS = gql`
                 _id
                 title
                 content
-                comments
                 createDate
             }
-            comments
         }
     }
 `;
@@ -30,10 +28,8 @@ export const QUERY_USER = gql`
                 _id
                 title
                 content
-                comments
                 createDate
             }
-            comments
         }
     }
 `;
@@ -49,10 +45,8 @@ export const QUERY_ME = gql`
                 _id
                 title
                 content
-                comments
                 createDate
             }
-            comments
         }
     }
 `;
@@ -61,9 +55,23 @@ export const QUERY_POSTS = gql`
     query allPosts {
         posts {
             _id
+            user {
+                _id
+                username
+                firstName
+                lastName
+            }
             title
             content
-            comments
+            comments {
+                _id
+                user {
+                    _id
+                    username
+                }
+                content
+                createdAt
+            }
             createDate
         }
     }
@@ -73,9 +81,26 @@ export const QUERY_SINGLE_POST = gql`
     query singlePost($postId: ID!) {
         post(postId: $postId) {
             _id
+            user {
+                _id
+            }
             title
             content
-            comments
+            comments {
+                _id
+                user {
+                    _id
+                    username
+                }
+                post {
+                    user {
+                        _id
+                    }
+                }
+                content
+                createdAt
+                timeSince
+            }
             createDate
         }
     }

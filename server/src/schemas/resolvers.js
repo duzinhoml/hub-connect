@@ -1,10 +1,15 @@
-import { User, Post } from '../models/index.js';
+import { User, Post, Comment } from '../models/index.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 
 const resolvers = {
     Query: {
         users: async () => {
-            return await User.find({}).populate('posts');
+            return await User.find({}).populate({
+                path: 'posts',
+                options: {
+                    sort: { createdAt: -1 }
+                }
+            });
         },
         user: async (_, { username }) => {
             const user = await User.findOne({ username }).populate('posts');
@@ -22,14 +27,34 @@ const resolvers = {
             throw new AuthenticationError('Not Authenticated');
         },
         posts: async () => {
-            return await Post.find({}).sort({ createdAt: -1 });
+            return await Post.find({})
+            .populate('user')
+            .populate({
+                path: 'comments',
+                options: {
+                    sort: { createdAt: -1 }
+                },
+                populate: 'user'
+            })
+            .sort({ createdAt: -1 });
         },
         post: async (_, { postId }) => {
-            const post = await Post.findOne({ _id: postId });
+            const post = await Post.findOne({ _id: postId })
+            .populate({
+                path: 'comments',
+                options: {
+                    sort: { createdAt: -1 }
+                },
+                populate: 'user'
+            });
+
             if (!post) {
                 throw new Error("Post not found");
             }
             return post;
+        },
+        comments: async () => {
+            return await Comment.find({});
         }
     },
     Mutation: {
@@ -70,7 +95,7 @@ const resolvers = {
             try {
                 if (context.user) {
                     const { title, content } = input;
-                    const post = await Post.create({ title, content });
+                    const post = await Post.create({ user: context.user._id, title, content });
 
                     const updatedUser = await User.findOneAndUpdate(
                         { _id: context.user._id },
@@ -92,7 +117,7 @@ const resolvers = {
                 throw new Error('Failed to created post');
             }
         },
-        createComment: async (_, { postId, comment }, context) => {
+        createComment: async (_, { postId, content }, context) => {
             try {
                 if (!context.user) {
                     throw new AuthenticationError('You need to be logged in!');
@@ -103,23 +128,35 @@ const resolvers = {
                     throw new Error('Post not found');
                 }
 
+                const comment = await Comment.create({
+                    user: context.user._id,
+                    post: postId,
+                    content: content
+                 });
+
                 const updatedPost = await Post.findOneAndUpdate(
                     { _id: postId },
-                    { $addToSet: {
-                        comments: comment
+                    { $push: {
+                        comments: comment._id
                     }},
                     { new: true }
                 );
 
-                await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $addToSet: {
-                        comments: comment
-                    }},
-                    { new: true }
-                );
+                // await User.findOneAndUpdate(
+                //     { _id: context.user._id },
+                //     { $push: {
+                //         comments: comment
+                //     }},
+                //     { new: true }
+                // );
 
-                return updatedPost;
+                return updatedPost.populate({
+                    path: 'comments',
+                    populate: [
+                        { path: 'user'},
+                        { path: 'post' }
+                    ]
+                });
             } 
             catch (err) {
                 throw new Error('Failed to create comment');
@@ -161,7 +198,10 @@ const resolvers = {
                     throw new Error('Post not found or update failed');
                 }
 
-                return post;
+                return post.populate({
+                    path: 'comments',
+                    populate: 'user'
+                });
             } 
             catch (err) {
                 return `Failed to update post: ${err.message}`;
@@ -216,6 +256,12 @@ const resolvers = {
                     }}
                 );
 
+                await Comment.deleteMany({
+                    _id: {
+                        $in: post.comments
+                    }
+                });
+
                 await Post.findOneAndDelete({ _id: postId });
                 return `The post "${post.title}" has been deleted successfully`;
             } 
@@ -223,7 +269,7 @@ const resolvers = {
                 return `Failed to delete note: ${err.message}`;
             }
         },
-        deleteComment: async (_, { postId, comment }, context) => {
+        deleteComment: async (_, { postId, commentId }, context) => {
             try {
                 if (!context.user) {
                     throw new AuthenticationError('You need to be logged in!');
@@ -237,20 +283,28 @@ const resolvers = {
                 const updatedPost = await Post.findOneAndUpdate(
                     { _id: postId },
                     { $pull: {
-                        comments: comment
+                        comments: commentId
                     }},
                     { new: true }
                 );
 
-                await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $pull: {
-                        comments: comment
-                    }},
-                    { new: true }
-                );
+                await Comment.findOneAndDelete({ _id: commentId });
 
-                return updatedPost;
+                // await User.findOneAndUpdate(
+                //     { _id: context.user._id },
+                //     { $pull: {
+                //         comments: comment
+                //     }},
+                //     { new: true }
+                // );
+
+                return updatedPost.populate({
+                    path: 'comments',
+                    options: {
+                        sort: { createdAt: -1 }
+                    },
+                    populate: 'user'
+                });
             } 
             catch (err) {
                 return `Failed to delete comment: ${err.message}`;

@@ -10,11 +10,22 @@ const typeDefs = `
 
     type Post {
         _id: ID!
+        user: User
         title: String!
         content: String!
-        comments: [String]
-        createDate: String
+        comments: [Comment]
         createdAt: String
+        createDate: String
+    }
+
+    type Comment {
+        _id: ID!
+        user: User
+        post: Post
+        content: String!
+        createdAt: String
+        createDate: String
+        timeSince: String
     }
 
     type Auth {
@@ -50,21 +61,22 @@ const typeDefs = `
         me: User
         posts: [Post]
         post(postId: ID!): Post
+        comments: [Comment]
     }
 
     type Mutation {
         createUser(input: CreateUserInput!): Auth
         login(username: String!, password: String!): Auth
         createPost(input: CreatePostInput!): String
-        createComment(postId: ID!, comment: String!): Post
+        createComment(postId: ID!, content: String!): Post
 
         updateUser(userId: ID!, input: UpdateUserInput!): User
         updatePost(postId: ID!, input: UpdatePostInput!): Post
-        updateComment(postId: ID!, comment: String!): Post
+        updateComment(commentId: ID!, content: String!): Post
 
         deleteUserById(userId: ID!): String
         deletePost(postId: ID!): String
-        deleteComment(postId: ID!, comment: String!): Post
+        deleteComment(postId: ID!, commentId: ID!): Post
     }
 `;
 
