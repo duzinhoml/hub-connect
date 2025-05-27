@@ -36,6 +36,7 @@ export const CREATE_COMMENT = gql`
             _id
             title
             content
+            likes
             createDate
             comments {
                 _id
@@ -62,11 +63,15 @@ export const UPDATE_USER = gql`
 `;
 
 export const UPDATE_POST = gql`
-    mutation updatePost($postId: ID!, $input: UpdatePostInput!) {
-        updatePost(postId: $postId, input: $input) {
+    mutation updatePost($postId: ID!, $userId: ID, $input: UpdatePostInput) {
+        updatePost(postId: $postId, userId: $userId, input: $input) {
             _id
             title
             content
+            likes {
+                _id
+                username
+            }
             comments {
                 _id
                 user {
@@ -76,6 +81,15 @@ export const UPDATE_POST = gql`
                 content
                 createdAt
             }
+        }
+    }
+`;
+
+export const UPDATE_COMMENT = gql`
+    mutation updateComment($commentId: ID!, $userId: ID, $content: String) {
+        updateComment(commentId: $commentId, userId: $userId, content: $content) {
+            _id
+            content
         }
     }
 `;
@@ -98,6 +112,7 @@ export const DELETE_COMMENT = gql`
             _id
             title
             content
+            likes
             comments {
                 _id
                 user {

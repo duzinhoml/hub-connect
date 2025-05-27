@@ -15,6 +15,12 @@ const commentSchema = new Schema(
             required: true,
             trim: true
         },
+        likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
         createdAt: {
             type: Date,
             default: Date.now,

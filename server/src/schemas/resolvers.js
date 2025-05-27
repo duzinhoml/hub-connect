@@ -28,25 +28,38 @@ const resolvers = {
         },
         posts: async () => {
             return await Post.find({})
-            .populate('user')
-            .populate({
-                path: 'comments',
-                options: {
-                    sort: { createdAt: -1 }
-                },
-                populate: 'user'
-            })
+            .populate([
+                { path: 'user' },
+                { path: 'likes' },
+                {
+                    path: 'comments',
+                    options: {
+                        sort: { createdAt: -1 }
+                    },
+                    populate: [
+                        { path: 'user' },
+                        { path: 'likes' }
+                    ]
+                }
+            ])
             .sort({ createdAt: -1 });
         },
         post: async (_, { postId }) => {
             const post = await Post.findOne({ _id: postId })
-            .populate({
-                path: 'comments',
-                options: {
-                    sort: { createdAt: -1 }
-                },
-                populate: 'user'
-            });
+            .populate([
+                { path: 'user' },
+                { path: 'likes' },
+                {
+                    path: 'comments',
+                    options: {
+                        sort: { createdAt: -1 }
+                    },
+                    populate: [
+                        { path: 'user' },
+                        { path: 'likes' }
+                    ]
+                }
+            ]);
 
             if (!post) {
                 throw new Error("Post not found");
@@ -173,6 +186,7 @@ const resolvers = {
                     { $set: input },
                     { new: true }
                 ).populate('posts');
+
                 if (!user) {
                     throw new Error('User not found or update failed');
                 }
@@ -183,28 +197,130 @@ const resolvers = {
                 throw new Error(`Failed to update user: ${err.message}`);
             }
         },
-        updatePost: async (_, { postId, input }, context) => {
+        updatePost: async (_, { postId, userId, input }, context) => {
             try {
                 if (!context.user) {
                     throw new Error('Not authenticated');
                 }
 
-                const post = await Post.findOneAndUpdate(
-                    { _id: postId },
-                    { $set: input },
-                    { new: true }
-                );
+                if (!userId) {
+                    const post = await Post.findOneAndUpdate(
+                        { _id: postId },
+                        { $set: input },
+                        { new: true }
+                    );
+                    if (!post) {
+                        throw new Error('Post not found or update failed');
+                    }
+    
+                    return post.populate([
+                        {
+                            path: 'likes'
+                        },
+                        {
+                            path: 'comments',
+                            populate: 'user'
+                        }
+                    ]);
+                }
+
+                const post = await Post.findOne({ _id: postId });
                 if (!post) {
                     throw new Error('Post not found or update failed');
                 }
 
-                return post.populate({
-                    path: 'comments',
-                    populate: 'user'
-                });
+                if (!post.likes.includes(userId)) {
+                    const updatedPost = await Post.findOneAndUpdate(
+                        { _id: postId },
+                        { $addToSet: {
+                            likes: userId
+                        }},
+                        { new: true}
+                    );
+
+
+                    return updatedPost.populate([
+                        {
+                            path: 'likes'
+                        },
+                        {
+                            path: 'comments',
+                            populate: 'user'
+                        }
+                    ]);
+                }
+
+                const updatedPost = await Post.findOneAndUpdate(
+                    { _id: postId },
+                    { $pull: {
+                        likes: userId
+                    }},
+                    { new: true }
+                );
+
+                return updatedPost.populate([
+                    {
+                        path: 'likes'
+                    },
+                    {
+                        path: 'comments',
+                        populate: 'user'
+                    }
+                ]);
             } 
             catch (err) {
                 return `Failed to update post: ${err.message}`;
+            }
+        },
+        updateComment: async (_, { commentId, userId, content }, context) => {
+            try {
+                if (!context.user) {
+                    throw new Error('Not authenticated');
+                }
+
+                if (!userId) {
+                    const updatedComment = await Comment.findOneAndUpdate(
+                        { _id: commentId },
+                        { $set: content },
+                        { new: true }
+                    );
+
+                    if (!updatedComment) {
+                        throw new Error('Comment not found or update failed');
+                    }
+
+                    return updatedComment;
+                }
+
+                const comment = await Comment.findOne({ _id: commentId });
+                if (!comment) {
+                    throw new Error('Comment not found or update failed');
+                }
+
+                if (!comment.likes.includes(userId)) {
+                    const updatedComment = await Comment.findOneAndUpdate(
+                        { _id: commentId },
+                        { $addToSet: {
+                            likes: userId
+                        }},
+                        { new: true }
+                    );
+
+                    return updatedComment;
+                }
+
+                const updatedComment = await Comment.findOneAndUpdate(
+                    { _id: commentId },
+                    { $pull: {
+                        likes: userId
+                    }},
+                    { new: true}
+                );
+
+                return updatedComment;
+            } 
+            catch (err) {
+                return `Failed to update comment: ${err.message}`;
             }
         },
         deleteUserById: async (_, { userId }) => {

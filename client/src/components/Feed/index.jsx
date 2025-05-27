@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_ME, QUERY_POSTS } from "../../utils/queries.js";
-import { DELETE_POST } from "../../utils/mutations.js";
+import { UPDATE_POST, DELETE_POST } from "../../utils/mutations.js";
 
 import CreatePost from "./CreatePost.jsx";
 import UpdatePost from "./UpdatePost.jsx";
@@ -13,6 +13,26 @@ function Feed({ me, users, error }) {
     const { data: postsData } = useQuery(QUERY_POSTS);
 
     const posts = postsData?.posts || [];
+
+    const [updatePost] = useMutation(UPDATE_POST, {
+        refetchQueries: [
+            QUERY_POSTS
+        ]
+    });
+
+    const handleLikePost = async (postId, userId) => {
+        try {
+            await updatePost({
+                variables: {
+                    postId,
+                    userId
+                }
+            });
+        } 
+        catch (err) {
+            console.error(err);
+        }
+    }
 
     const [deletePost] = useMutation(DELETE_POST, {
         refetchQueries: [
@@ -51,13 +71,25 @@ function Feed({ me, users, error }) {
                                 </div>
                                 <div className="col text-center">{post.createDate}</div>
                                 <div className="col text-end">
+                                    <span
+                                        className="badge bg-secondary me-1"
+                                    >
+                                        {post.likes.length} likes
+                                    </span>
+                                    <button
+                                        className="btn px-2 py-1"
+                                        type="button"
+                                        onClick={() => handleLikePost(post._id, me._id)}
+                                    >
+                                        {post.likes.some(like => like._id === me._id) ? <i class="fa-solid fa-heart"></i> : <i class="fa-regular fa-heart"></i>}
+                                    </button>
                                     <button 
-                                        className="btn me-2"
+                                        className="btn me-2 px-2 py-1"
                                         type="button" 
                                         data-bs-toggle="offcanvas" 
                                         data-bs-target={`#postComments${post._id}`}
                                     >
-                                        <i className="fa-solid fa-angle-down"></i>
+                                        <i class="fa-regular fa-comment"></i>
                                     </button>
                                     {post.user._id === me._id ? (
                                         <>

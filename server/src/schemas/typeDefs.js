@@ -13,6 +13,7 @@ const typeDefs = `
         user: User
         title: String!
         content: String!
+        likes: [User]
         comments: [Comment]
         createdAt: String
         createDate: String
@@ -23,6 +24,7 @@ const typeDefs = `
         user: User
         post: Post
         content: String!
+        likes: [User]
         createdAt: String
         createDate: String
         timeSince: String
@@ -71,8 +73,8 @@ const typeDefs = `
         createComment(postId: ID!, content: String!): Post
 
         updateUser(userId: ID!, input: UpdateUserInput!): User
-        updatePost(postId: ID!, input: UpdatePostInput!): Post
-        updateComment(commentId: ID!, content: String!): Post
+        updatePost(postId: ID!, userId: ID, input: UpdatePostInput): Post
+        updateComment(commentId: ID!, userId: ID, content: String): Comment
 
         deleteUserById(userId: ID!): String
         deletePost(postId: ID!): String

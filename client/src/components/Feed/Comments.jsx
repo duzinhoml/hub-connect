@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_SINGLE_POST } from "../../utils/queries.js";
 
-import { CREATE_COMMENT } from "../../utils/mutations.js";
-import { DELETE_COMMENT } from "../../utils/mutations.js";
+import { CREATE_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from "../../utils/mutations.js";
 
 function Comments({ currentPost, me, users }) {
     const [formData, setFormData] = useState('')
@@ -16,7 +15,16 @@ function Comments({ currentPost, me, users }) {
     });
 
     const [createComment] = useMutation(CREATE_COMMENT);
-
+    const [updateComment] = useMutation(UPDATE_COMMENT, {
+        refetchQueries: [
+            { 
+                query: QUERY_SINGLE_POST,
+                variables: {
+                    postId: currentPost ? currentPost._id : null
+                }
+            }
+        ]
+    });
     const [deleteComment] = useMutation(DELETE_COMMENT);
 
     const handleInputChange = (e) => {
@@ -34,6 +42,20 @@ function Comments({ currentPost, me, users }) {
                 } 
             });
             setFormData('');
+        } 
+        catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleLikeComment = async (commentId, userId) => {
+        try {
+            await updateComment({
+                variables: {
+                    commentId,
+                    userId
+                }
+            });
         } 
         catch (err) {
             console.error(err);
@@ -60,7 +82,9 @@ function Comments({ currentPost, me, users }) {
         <div className="offcanvas offcanvas-bottom" tabIndex="-1" id={currentPost && `postComments${currentPost._id}`} aria-labelledby="postCommentsLabel" style={{ height: '50vh' }}>
             <div className="offcanvas-header">
                 <h5 className="offcanvas-title" id="postCommentsLabel">
-                    {currentPost ? `${currentPost.user.username}'s Post` : 'Comments'}
+                    {currentPost && currentPost.user._id === me._id ? 
+                        'Your Post' : currentPost ? 
+                        `${currentPost.user.username}'s Post` : 'Comments'}
                 </h5>
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
@@ -76,15 +100,25 @@ function Comments({ currentPost, me, users }) {
                                     </div>
                                     <div>{comment.content}</div>
                                 </div>
-                                {comment.user._id === me._id ? (
-                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
-                                        <i className="fa-solid fa-trash"></i>
+                                <div>
+                                    <span
+                                        className="badge bg-secondary me-1"
+                                    >
+                                        {comment.likes?.length} {comment.likes?.length === 1 ? 'like' : 'likes'}
+                                    </span>
+                                    <button type="button" className="btn btn-sm me-2" onClick={() => handleLikeComment(comment._id, me._id)}>
+                                        {comment.likes.some(like => like._id === me._id) ? <i className="fa-solid fa-heart"></i> : <i className="fa-regular fa-heart"></i>}
                                     </button>
-                                ) : singlePost.user._id === me._id ? (
-                                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
-                                        <i className="fa-solid fa-trash"></i>
-                                    </button>
-                                ) : ''}
+                                    {comment.user._id === me._id ? (
+                                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
+                                            <i className="fa-solid fa-trash"></i>
+                                        </button>
+                                    ) : singlePost.user._id === me._id ? (
+                                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
+                                            <i className="fa-solid fa-trash"></i>
+                                        </button>
+                                    ) : ''}
+                                </div>
                             </div>
                         </div>
                     ))

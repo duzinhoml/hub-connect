@@ -63,6 +63,10 @@ export const QUERY_POSTS = gql`
             }
             title
             content
+            likes {
+                _id
+                username
+            }
             comments {
                 _id
                 user {
@@ -86,6 +90,10 @@ export const QUERY_SINGLE_POST = gql`
             }
             title
             content
+            likes {
+                _id
+                username
+            }
             comments {
                 _id
                 user {
@@ -98,6 +106,10 @@ export const QUERY_SINGLE_POST = gql`
                     }
                 }
                 content
+                likes {
+                    _id
+                    username
+                }
                 createdAt
                 timeSince
             }
