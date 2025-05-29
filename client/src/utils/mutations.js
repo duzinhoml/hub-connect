@@ -36,15 +36,11 @@ export const CREATE_COMMENT = gql`
             _id
             title
             content
-            likes
             createDate
             comments {
                 _id
                 user {
                     username
-                }
-                post {
-                    title
                 }
                 content
             }
@@ -68,10 +64,6 @@ export const UPDATE_POST = gql`
             _id
             title
             content
-            likes {
-                _id
-                username
-            }
             comments {
                 _id
                 user {
@@ -112,7 +104,6 @@ export const DELETE_COMMENT = gql`
             _id
             title
             content
-            likes
             comments {
                 _id
                 user {

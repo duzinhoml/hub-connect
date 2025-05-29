@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { QUERY_ME, QUERY_POSTS } from '../../utils/queries.js';
+import { QUERY_POSTS } from '../../utils/queries.js';
 import { UPDATE_POST } from '../../utils/mutations.js';
 
 function UpdatePost({ currentPost }) {
@@ -11,7 +11,6 @@ function UpdatePost({ currentPost }) {
 
     const [updatePost] = useMutation(UPDATE_POST, {
         refetchQueries: [
-            QUERY_ME,
             QUERY_POSTS
         ]
     });

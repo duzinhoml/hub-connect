@@ -1,12 +1,12 @@
 import Nav from '../Nav/index.jsx'
 import Feed from '../Feed/index.jsx'
 
-function Dashboard({ me, users, error }) {
+function Dashboard({ me, error }) {
 
     return (
         <div>
             <Nav me={me}/>
-            <Feed me={me} users={users} error={error}/>
+            <Feed me={me} error={error}/>
         </div>
     );
 };

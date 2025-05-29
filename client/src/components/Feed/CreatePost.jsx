@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { QUERY_ME, QUERY_POSTS } from "../../utils/queries";
+import { QUERY_POSTS } from "../../utils/queries";
 import { CREATE_POST } from "../../utils/mutations.js";
 
 function CreatePost() {
@@ -11,7 +11,6 @@ function CreatePost() {
 
     const [createPost] = useMutation(CREATE_POST, {
         refetchQueries: [
-            QUERY_ME,
             QUERY_POSTS
         ]
     });

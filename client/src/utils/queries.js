@@ -90,6 +90,7 @@ export const QUERY_SINGLE_POST = gql`
             }
             title
             content
+            createDate
             likes {
                 _id
                 username
@@ -100,11 +101,6 @@ export const QUERY_SINGLE_POST = gql`
                     _id
                     username
                 }
-                post {
-                    user {
-                        _id
-                    }
-                }
                 content
                 likes {
                     _id
@@ -113,7 +109,6 @@ export const QUERY_SINGLE_POST = gql`
                 createdAt
                 timeSince
             }
-            createDate
         }
     }
 `;

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { QUERY_ME, QUERY_POSTS } from "../../utils/queries.js";
+import { QUERY_POSTS } from "../../utils/queries.js";
 import { UPDATE_POST, DELETE_POST } from "../../utils/mutations.js";
 
 import CreatePost from "./CreatePost.jsx";
 import UpdatePost from "./UpdatePost.jsx";
 import Comments from "./Comments.jsx";
 
-function Feed({ me, users, error }) {
+function Feed({ me, error }) {
     const [currentPost, setCurrentPost] = useState(null);
 
     const { data: postsData } = useQuery(QUERY_POSTS);
@@ -36,7 +36,6 @@ function Feed({ me, users, error }) {
 
     const [deletePost] = useMutation(DELETE_POST, {
         refetchQueries: [
-            QUERY_ME,
             QUERY_POSTS
         ]
     });
@@ -67,24 +66,25 @@ function Feed({ me, users, error }) {
                             <div className="card-header d-flex align-items-center justify-content-between row">
                                 <div className="d-flex flex-column col">
                                     <div>{post.user.firstName} {post.user.lastName}</div>
-                                    <div>{post.title}</div>
+                                    {/* <div>{post.title}</div> */}
                                 </div>
-                                <div className="col text-center">{post.createDate}</div>
+                                {/* <div className="col text-center">{post.createDate}</div> */}
+                                <div className="col text-center">{post.title}</div>
                                 <div className="col text-end">
                                     <span
                                         className="badge bg-secondary me-1"
                                     >
-                                        {post.likes.length} likes
+                                        {post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}
                                     </span>
                                     <button
                                         className="btn px-2 py-1"
                                         type="button"
                                         onClick={() => handleLikePost(post._id, me._id)}
                                     >
-                                        {post.likes.some(like => like._id === me._id) ? <i class="fa-solid fa-heart"></i> : <i class="fa-regular fa-heart"></i>}
+                                        {post.likes.some(like => like._id === me._id) ? <i class="fa-solid fa-heart text-danger"></i> : <i class="fa-regular fa-heart"></i>}
                                     </button>
                                     <button 
-                                        className="btn me-2 px-2 py-1"
+                                        className="btn px-2 py-1"
                                         type="button" 
                                         data-bs-toggle="offcanvas" 
                                         data-bs-target={`#postComments${post._id}`}
@@ -92,19 +92,34 @@ function Feed({ me, users, error }) {
                                         <i class="fa-regular fa-comment"></i>
                                     </button>
                                     {post.user._id === me._id ? (
-                                        <>
-                                            <button 
-                                                type="button" 
-                                                className="btn btn-warning btn-sm me-2" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#updatePost"
-                                            >
-                                                <i className="fa-solid fa-pen-to-square"></i>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-gear"></i>
                                             </button>
-                                            <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeletePost(post._id)}>
-                                                <i className="fa-solid fa-trash"></i>
-                                            </button>
-                                        </>
+                                            <ul class="dropdown-menu p-2">
+                                                <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-warning btn-sm mb-2 w-100 d-flex justify-content-between align-items-center" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#updatePost"
+                                                    >
+                                                        <span>Edit Post</span>
+                                                        <i className="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center" 
+                                                        onClick={() => handleDeletePost(post._id)}
+                                                    >
+                                                        <span>Delete Post</span>
+                                                        <i className="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     ) : ''}
                                 </div>
                             </div>
@@ -122,7 +137,7 @@ function Feed({ me, users, error }) {
                 )}
             <CreatePost />
             <UpdatePost currentPost={currentPost}/>
-            <Comments currentPost={currentPost} me={me} users={users} />
+            <Comments currentPost={currentPost} me={me} />
         </>
     );
 };

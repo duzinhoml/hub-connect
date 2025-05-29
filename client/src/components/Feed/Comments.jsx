@@ -5,7 +5,7 @@ import { QUERY_SINGLE_POST } from "../../utils/queries.js";
 
 import { CREATE_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from "../../utils/mutations.js";
 
-function Comments({ currentPost, me, users }) {
+function Comments({ currentPost, me }) {
     const [formData, setFormData] = useState('')
 
     const { data: singlePostData } = useQuery(QUERY_SINGLE_POST, {
@@ -99,6 +99,14 @@ function Comments({ currentPost, me, users }) {
                                         <span className="text-muted ms-2">{comment.timeSince}</span>
                                     </div>
                                     <div>{comment.content}</div>
+
+                                    {/* WIP (Comment replies) */}
+                                    {/* <div class="collapse" id={`collapseExample${comment._id}`}>
+                                        <div class="card card-body">
+                                            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger. 
+                                        </div>
+                                    </div> */}
+
                                 </div>
                                 <div>
                                     <span
@@ -106,17 +114,72 @@ function Comments({ currentPost, me, users }) {
                                     >
                                         {comment.likes?.length} {comment.likes?.length === 1 ? 'like' : 'likes'}
                                     </span>
-                                    <button type="button" className="btn btn-sm me-2" onClick={() => handleLikeComment(comment._id, me._id)}>
-                                        {comment.likes.some(like => like._id === me._id) ? <i className="fa-solid fa-heart"></i> : <i className="fa-regular fa-heart"></i>}
+                                    <button type="button" className="btn btn-sm" onClick={() => handleLikeComment(comment._id, me._id)}>
+                                        {comment.likes.some(like => like._id === me._id) ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
                                     </button>
                                     {comment.user._id === me._id ? (
-                                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-gear"></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-2">
+                                                {/* WIP (Edit Comment) */}
+                                                {/* <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-warning btn-sm mb-2 w-100 d-flex justify-content-between align-items-center" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#updatePost"
+                                                    >
+                                                        <span>Edit Comment</span>
+                                                        <i className="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </li> */}
+
+                                                {/* WIP (Reply to Comment) */}
+                                                {/* <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-info btn-sm mb-2 w-100 d-flex justify-content-between align-items-center" 
+                                                        data-bs-toggle="collapse" 
+                                                        data-bs-target={`#collapseExample${comment._id}`} 
+                                                        aria-expanded="false" 
+                                                        aria-controls="collapseExample"
+                                                    >
+                                                        <span>Reply</span>
+                                                        <i class="fa-solid fa-reply"></i>
+                                                    </button>
+                                                </li> */}
+                                                <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center" 
+                                                        onClick={() => handleDeleteComment(currentPost._id, comment._id)}
+                                                    >
+                                                        <span>Delete Comment</span>
+                                                        <i className="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     ) : singlePost.user._id === me._id ? (
-                                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(currentPost._id, comment._id)}>
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-gear"></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-2">
+                                                <li>
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center" 
+                                                        onClick={() => handleDeleteComment(currentPost._id, comment._id)}
+                                                    >
+                                                        <span>Delete Comment</span>
+                                                        <i className="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     ) : ''}
                                 </div>
                             </div>
