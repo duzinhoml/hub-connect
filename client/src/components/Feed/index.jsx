@@ -60,19 +60,23 @@ function Feed({ me, error }) {
                 posts.map(post => (
                     <div 
                             key={post._id} 
-                            className="card mb-2 mx-2" 
+                            className="card mb-2 mx-2 border-2 rounded-0" 
+                            style={{ borderColor: '#533b30'}}
                             onMouseOver={() => setCurrentPost(post)}
                         >
-                            <div className="card-header d-flex align-items-center justify-content-between row">
-                                <div className="d-flex flex-column col">
+                            <div 
+                                className="card-header align-items-center row mlColor border-2 rounded-0 m-0 px-0" 
+                                style={{ backgroundColor: '#d3c2aa'}}
+                            >
+                                <div className="col">
                                     <div>{post.user.firstName} {post.user.lastName}</div>
-                                    {/* <div>{post.title}</div> */}
                                 </div>
                                 {/* <div className="col text-center">{post.createDate}</div> */}
                                 <div className="col text-center">{post.title}</div>
                                 <div className="col text-end">
                                     <span
-                                        className="badge bg-secondary me-1"
+                                        className="badge me-1"
+                                        style={{ backgroundColor: '#533b30' }}
                                     >
                                         {post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}
                                     </span>
@@ -91,6 +95,8 @@ function Feed({ me, error }) {
                                     >
                                         <i class="fa-regular fa-comment"></i>
                                     </button>
+
+                                    {/* Dropdown */}
                                     {post.user._id === me._id ? (
                                         <div class="dropdown d-inline-block">
                                             <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -123,7 +129,7 @@ function Feed({ me, error }) {
                                     ) : ''}
                                 </div>
                             </div>
-                            <div className="card-body text-start">
+                            <div className="card-body text-start mlColor">
                                 <p className="card-text">
                                     {post.content}
                                 </p>

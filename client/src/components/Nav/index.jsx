@@ -1,40 +1,46 @@
 import Auth from '../../utils/auth.js';
+import { getCurrentDate } from './currentDate.js';
 
-function Nav({ me }) {
+import './index.css';
+
+function Nav() {
 
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-            <div className="container-fluid">
-                <span className="navbar-brand">HubConnect</span>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarText">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item">
-                        <span className="nav-link active" aria-current="page">{me.firstName} {me.lastName}</span>
-                    </li>
-                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPost">
+        <div className="container-fluid px-0">
+            <div className="text-center p-2 pb-0">
+                <span
+                    id="header"
+                    className='border-top-0 border-start-0 border-end-0 fs-1 d-block'
+                    style={{ borderStyle: 'double', borderWidth: '7px' }}
+                >HubConnect</span>
+            </div>
+            <div 
+                className='row mx-2 my-3 p-2'
+                style={{ backgroundColor: '#533b30', color: '#d3c2aa'}}
+            >
+                <span className='text-start col p-0 align-content-center'>
+                    <button 
+                        type="button" 
+                        className="btn btn-sm rounded-0 border-2" 
+                        style={{ color: '#d3c2aa', borderColor: '#d3c2aa', fontWeight: 600 }}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#createPost"
+                    >
                         Create Post
                     </button>
-                </ul>
-                <span className="navbar-text">
+                </span>
+                <span className='text-center col p-0 align-content-center'>{getCurrentDate()}</span>
+                <span className='text-end col p-0 align-content-center'>
                     <button
-                        className='btn btn-secondary me-2'
-                        onClick={() => window.location.reload()}
-                    >
-                        <i class="fa-solid fa-arrows-rotate"></i>
-                    </button>
-                    <button
-                        className='btn btn-danger'
+                        className='btn btn-sm rounded-0 border-2'
+                        style={{ color: '#d3c2aa', borderColor: '#d3c2aa', fontWeight: 600 }}
                         onClick={() => Auth.logout()}
                     >
                         Log Out
                     </button>
                 </span>
-                </div>
             </div>
-        </nav>
+        </div>
     );
 };
 

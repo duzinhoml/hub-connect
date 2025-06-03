@@ -1,5 +1,16 @@
+#root, html {
+  color: #533b30;
+  background-color: #d3c2aa;
+  font-family: 'Spectral';
+  font-weight: 600;
+}
+
+.mlColor {
+  color: #533b30;
+}
+
 /* #root {
-  font-family: '';
+  font-family: 'UnifrakturMaguntia';
 } */
 
 /* #root {

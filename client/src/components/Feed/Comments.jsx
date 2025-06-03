@@ -79,9 +79,9 @@ function Comments({ currentPost, me }) {
     const singlePost = singlePostData?.post || {};
 
     return (
-        <div className="offcanvas offcanvas-bottom" tabIndex="-1" id={currentPost && `postComments${currentPost._id}`} aria-labelledby="postCommentsLabel" style={{ height: '50vh' }}>
+        <div className="offcanvas offcanvas-bottom" tabIndex="-1" id={currentPost && `postComments${currentPost._id}`} aria-labelledby="postCommentsLabel" style={{ height: '50vh', backgroundColor: '#d3c2aa' }}>
             <div className="offcanvas-header">
-                <h5 className="offcanvas-title" id="postCommentsLabel">
+                <h5 className="offcanvas-title mlColor" id="postCommentsLabel" style={{ fontWeight: 600 }}>
                     {currentPost && currentPost.user._id === me._id ? 
                         'Your Post' : currentPost ? 
                         `${currentPost.user.username}'s Post` : 'Comments'}
@@ -93,7 +93,7 @@ function Comments({ currentPost, me }) {
                     singlePost?.comments.map(comment => (
                         <div key={comment._id} className="card mb-2 mx-2 p-2">
                             <div className="d-flex justify-content-between align-items-center">
-                                <div className="d-flex flex-column">
+                                <div className="d-flex flex-column mlColor">
                                     <div>
                                         {comment.user.username}
                                         <span className="text-muted ms-2">{comment.timeSince}</span>

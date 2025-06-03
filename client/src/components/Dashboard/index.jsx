@@ -5,7 +5,7 @@ function Dashboard({ me, error }) {
 
     return (
         <div>
-            <Nav me={me}/>
+            <Nav/>
             <Feed me={me} error={error}/>
         </div>
     );
