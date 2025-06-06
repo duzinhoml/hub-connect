@@ -7,6 +7,8 @@ import CreatePost from "./CreatePost.jsx";
 import UpdatePost from "./UpdatePost.jsx";
 import Comments from "./Comments.jsx";
 
+import '../../App.css';
+
 function Feed({ me, error }) {
     const [currentPost, setCurrentPost] = useState(null);
 
@@ -60,8 +62,8 @@ function Feed({ me, error }) {
                 posts.map(post => (
                     <div 
                             key={post._id} 
-                            className="card mb-2 mx-2 border-2 rounded-0" 
-                            style={{ borderColor: '#533b30'}}
+                            className="card mb-2 mx-auto border-2 rounded-0" 
+                            style={{ borderColor: '#533b30', maxWidth: '75%' }}
                             onMouseOver={() => setCurrentPost(post)}
                         >
                             <div 
@@ -71,7 +73,6 @@ function Feed({ me, error }) {
                                 <div className="col">
                                     <div>{post.user.firstName} {post.user.lastName}</div>
                                 </div>
-                                {/* <div className="col text-center">{post.createDate}</div> */}
                                 <div className="col text-center">{post.title}</div>
                                 <div className="col text-end">
                                     <span
@@ -102,11 +103,11 @@ function Feed({ me, error }) {
                                             <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-solid fa-gear"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-2">
+                                            <ul class="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
                                                 <li>
                                                     <button 
                                                         type="button" 
-                                                        className="btn btn-warning btn-sm mb-2 w-100 d-flex justify-content-between align-items-center" 
+                                                        className="btn btn-sm mb-2 w-100 d-flex justify-content-between align-items-center darkColor" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#updatePost"
                                                     >
@@ -117,7 +118,7 @@ function Feed({ me, error }) {
                                                 <li>
                                                     <button 
                                                         type="button" 
-                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center" 
+                                                        className="btn btn-sm w-100 d-flex justify-content-between align-items-center darkColor" 
                                                         onClick={() => handleDeletePost(post._id)}
                                                     >
                                                         <span>Delete Post</span>
@@ -127,10 +128,11 @@ function Feed({ me, error }) {
                                             </ul>
                                         </div>
                                     ) : ''}
+
                                 </div>
                             </div>
                             <div className="card-body text-start mlColor">
-                                <p className="card-text">
+                                <p className="card-text" style={{ columns: 2, columnGap: '1.5rem' }}>
                                     {post.content}
                                 </p>
                             </div>

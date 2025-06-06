@@ -5,6 +5,8 @@ import { QUERY_SINGLE_POST } from "../../utils/queries.js";
 
 import { CREATE_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from "../../utils/mutations.js";
 
+import '../../App.css'
+
 function Comments({ currentPost, me }) {
     const [formData, setFormData] = useState('')
 
@@ -88,10 +90,11 @@ function Comments({ currentPost, me }) {
                 </h5>
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
+
             <div className="offcanvas-body small">
                 {singlePost && singlePost?.comments?.length ? (
                     singlePost?.comments.map(comment => (
-                        <div key={comment._id} className="card mb-2 mx-2 p-2">
+                        <div key={comment._id} className="card mb-2 mx-2 p-2 rounded-0 border-2" style={{ borderColor: '#533b30' }}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex flex-column mlColor">
                                     <div>
@@ -110,19 +113,22 @@ function Comments({ currentPost, me }) {
                                 </div>
                                 <div>
                                     <span
-                                        className="badge bg-secondary me-1"
+                                        className="badge me-1"
+                                        style={{ backgroundColor: '#533b30' }}
                                     >
                                         {comment.likes?.length} {comment.likes?.length === 1 ? 'like' : 'likes'}
                                     </span>
                                     <button type="button" className="btn btn-sm" onClick={() => handleLikeComment(comment._id, me._id)}>
                                         {comment.likes.some(like => like._id === me._id) ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
                                     </button>
+
+                                    {/* Dropdown */}
                                     {comment.user._id === me._id ? (
                                         <div class="dropdown d-inline-block">
                                             <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-solid fa-gear"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-2">
+                                            <ul class="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
                                                 {/* WIP (Edit Comment) */}
                                                 {/* <li>
                                                     <button 
@@ -153,7 +159,7 @@ function Comments({ currentPost, me }) {
                                                 <li>
                                                     <button 
                                                         type="button" 
-                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center" 
+                                                        className="btn btn-danger btn-sm w-100 d-flex justify-content-between align-items-center darkColor" 
                                                         onClick={() => handleDeleteComment(currentPost._id, comment._id)}
                                                     >
                                                         <span>Delete Comment</span>
@@ -199,7 +205,7 @@ function Comments({ currentPost, me }) {
                         onChange={handleInputChange}
                         autoComplete="off"
                     />
-                    <button className="btn btn-primary ms-2" type="submit">
+                    <button className="btn ms-2"  style={{ backgroundColor: '#533b30', color: '#d4c3ab' }}type="submit">
                         <i className="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
