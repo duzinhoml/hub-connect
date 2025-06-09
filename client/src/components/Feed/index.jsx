@@ -144,7 +144,7 @@ function Feed({ me, error }) {
                     </div>
                 )}
             <CreatePost />
-            <UpdatePost currentPost={currentPost}/>
+            <UpdatePost currentPost={currentPost} setCurrentPost={setCurrentPost}/>
             <Comments currentPost={currentPost} me={me} />
         </>
     );

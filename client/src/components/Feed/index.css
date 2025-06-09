@@ -1,0 +1,17 @@
+.postInput {
+    border: 2px solid hsl(35, 32%, 75%);
+
+    &:focus {
+        border: 2px solid hsl(35, 32%, 65%);
+        box-shadow: 2px 2px 3px #d3c2aa, -2px 2px 3px #d3c2aa, -2px -2px 3px #d3c2aa,  2px -2px 3px #d3c2aa !important;
+    }
+}
+
+.createCommentInput {
+    border: 2px solid #533b30;
+
+    &:focus {
+        border: 2px solid hsl(19, 27%, 16%);
+        box-shadow: 2px 2px 3px #755343, -2px 2px 3px #755343, -2px -2px 3px #755343,  2px -2px 3px #755343 !important;
+    }
+}

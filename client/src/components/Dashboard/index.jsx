@@ -4,7 +4,7 @@ import Feed from '../Feed/index.jsx'
 function Dashboard({ me, error }) {
 
     return (
-        <div>
+        <div className='mx-1'>
             <Nav/>
             <Feed me={me} error={error}/>
         </div>

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { QUERY_POSTS } from '../../utils/queries.js';
 import { UPDATE_POST } from '../../utils/mutations.js';
 
-function UpdatePost({ currentPost }) {
+function UpdatePost({ currentPost, setCurrentPost }) {
+    const textareaRef = useRef(null);
     const [formData, setFormData] = useState({
         title: '',
         content: ''
@@ -30,6 +31,11 @@ function UpdatePost({ currentPost }) {
             ...formData,
             [name]: value
         });
+
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
     };
 
     const handleFormSubmit = async (e) => {
@@ -56,13 +62,22 @@ function UpdatePost({ currentPost }) {
         }
     }
 
+    const cancelPostUpdate = () => {
+        setFormData({
+            title: '',
+            content: ''
+        });
+
+        setCurrentPost(null);
+    }
+
     return (
         <div className="modal fade" id="updatePost" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="updatePostLabel" aria-hidden="true">
             <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
+                <div className="modal-content" style={{ backgroundColor: '#533b30', color: '#d3c2aa' }}>
+                    <div className="modal-header" style={{ borderColor: '#d3c2aa' }}>
                         <h1 className="modal-title fs-5" id="updatePostLabel">Update Post</h1>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => cancelPostUpdate()}></button>
                     </div>
                     <form onSubmit={handleFormSubmit}>
                         <div className="modal-body">
@@ -72,21 +87,22 @@ function UpdatePost({ currentPost }) {
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 placeholder="Title"
-                                className="form-control mb-2"
+                                className="form-control mb-2 postInput"
                             />
                             <textarea 
-                                rows={20}
+                                ref={textareaRef}
+                                rows={10}
                                 type="text" 
                                 name="content"
                                 value={formData.content}
                                 onChange={handleInputChange}
                                 placeholder="Content"
-                                className="form-control mb-2"
+                                className="form-control mb-2 postInput"
                             />
                         </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Save Changes</button>
+                        <div className="modal-footer" style={{ borderColor: '#d3c2aa' }}>
+                            <button type="button" className="btn darkColor" data-bs-dismiss="modal" onClick={() => cancelPostUpdate()}>Cancel</button>
+                            <button type="submit" className="btn darkColor" data-bs-dismiss="modal" disabled={!formData.title || !formData.content}>Save Changes</button>
                         </div>
                     </form>
                 </div>

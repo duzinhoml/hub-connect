@@ -14,18 +14,18 @@
   background-color: #d4c3ab;
   border-color: #533b30;
   font-weight: 600;
-}
 
-.lightColor:hover {
-  color: #d3c2aa;
-  background-color: #533b30;
-  border-color: hsl(19, 27%, 16%);
-}
+  &:hover {
+    color: #d3c2aa;
+    background-color: #533b30;
+    border-color: hsl(19, 27%, 16%);
+  }
 
-.lightColor:active {
-  color: hsl(35, 32%, 65%) !important;
-  background-color: hsl(19, 27%, 16%) !important;
-  border-color: hsl(19, 27%, 11%) !important;
+  &:active {
+    color: hsl(35, 32%, 65%) !important;
+    background-color: hsl(19, 27%, 16%) !important;
+    border-color: hsl(19, 27%, 11%) !important;
+  }
 }
 
 .darkColor {
@@ -33,18 +33,18 @@
   background-color: #533b30;
   border-color: #d3c2aa;
   font-weight: 600;
-}
 
-.darkColor:hover {
-  color: #533b30;
-  background-color: #d3c2aa;
-  border-color: hsl(35, 32%, 55%);
-}
+  &:hover {
+    color: #533b30;
+    background-color: #d3c2aa;
+    border-color: hsl(35, 32%, 55%);
+  }
 
-.darkColor:active {
-  color: hsl(19, 27%, 16%) !important;
-  background-color: hsl(35, 32%, 65%) !important;
-  border-color: hsl(35, 32%, 35%) !important;
+  &:active {
+    color: hsl(19, 27%, 16%) !important;
+    background-color: hsl(35, 32%, 65%) !important;
+    border-color: hsl(35, 32%, 35%) !important;
+  }
 }
 
 /* #root {
