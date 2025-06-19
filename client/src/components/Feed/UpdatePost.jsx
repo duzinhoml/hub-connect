@@ -76,7 +76,7 @@ function UpdatePost({ currentPost, setCurrentPost }) {
             <div className="modal-dialog">
                 <div className="modal-content" style={{ backgroundColor: '#533b30', color: '#d3c2aa' }}>
                     <div className="modal-header" style={{ borderColor: '#d3c2aa' }}>
-                        <h1 className="modal-title fs-5" id="updatePostLabel">Update Post</h1>
+                        <h1 className="modal-title fs-5" id="updatePostLabel">Edit Post</h1>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => cancelPostUpdate()}></button>
                     </div>
                     <form onSubmit={handleFormSubmit}>

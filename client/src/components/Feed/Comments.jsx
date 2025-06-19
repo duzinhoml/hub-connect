@@ -105,8 +105,8 @@ function Comments({ currentPost, me }) {
                                     <div>{comment.content}</div>
 
                                     {/* WIP (Comment replies) */}
-                                    {/* <div class="collapse" id={`collapseExample${comment._id}`}>
-                                        <div class="card card-body">
+                                    {/* <div className="collapse" id={`collapseExample${comment._id}`}>
+                                        <div className="card card-body">
                                             Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger. 
                                         </div>
                                     </div> */}
@@ -125,11 +125,11 @@ function Comments({ currentPost, me }) {
 
                                     {/* Dropdown */}
                                     {comment.user._id === me._id ? (
-                                        <div class="dropdown d-inline-block">
-                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-gear"></i>
+                                        <div className="dropdown d-inline-block">
+                                            <button className="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i className="fa-solid fa-gear"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
+                                            <ul className="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
                                                 {/* WIP (Edit Comment) */}
                                                 {/* <li>
                                                     <button 
@@ -154,7 +154,7 @@ function Comments({ currentPost, me }) {
                                                         aria-controls="collapseExample"
                                                     >
                                                         <span>Reply</span>
-                                                        <i class="fa-solid fa-reply"></i>
+                                                        <i className="fa-solid fa-reply"></i>
                                                     </button>
                                                 </li> */}
                                                 <li>
@@ -170,11 +170,11 @@ function Comments({ currentPost, me }) {
                                             </ul>
                                         </div>
                                     ) : singlePost.user._id === me._id ? (
-                                        <div class="dropdown d-inline-block">
-                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-gear"></i>
+                                        <div className="dropdown d-inline-block">
+                                            <button className="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i className="fa-solid fa-gear"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
+                                            <ul className="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
                                                 <li>
                                                     <button 
                                                         type="button" 

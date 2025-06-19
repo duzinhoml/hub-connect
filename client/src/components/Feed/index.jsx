@@ -86,7 +86,7 @@ function Feed({ me, error }) {
                                         type="button"
                                         onClick={() => handleLikePost(post._id, me._id)}
                                     >
-                                        {post.likes.some(like => like._id === me._id) ? <i class="fa-solid fa-heart text-danger"></i> : <i class="fa-regular fa-heart"></i>}
+                                        {post.likes.some(like => like._id === me._id) ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
                                     </button>
                                     <button 
                                         className="btn px-2 py-1"
@@ -94,16 +94,16 @@ function Feed({ me, error }) {
                                         data-bs-toggle="offcanvas" 
                                         data-bs-target={`#postComments${post._id}`}
                                     >
-                                        <i class="fa-regular fa-comment"></i>
+                                        <i className="fa-regular fa-comment"></i>
                                     </button>
 
                                     {/* Dropdown */}
                                     {post.user._id === me._id ? (
-                                        <div class="dropdown d-inline-block">
-                                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-gear"></i>
+                                        <div className="dropdown d-inline-block">
+                                            <button className="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i className="fa-solid fa-gear"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
+                                            <ul className="dropdown-menu p-2" style={{ backgroundColor: '#533b30' }}>
                                                 <li>
                                                     <button 
                                                         type="button" 
